@@ -3,7 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
 from datetime import datetime
-import pandas as pd
 import json
 import os
 import uuid
@@ -664,3 +663,4 @@ def responder_proposta():
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)
+
