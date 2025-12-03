@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Contador - Encontrar Contador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .contador-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .header-info h1 {
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .header-info p {
+            color: var(--gray-500);
+            font-size: 16px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        .perfil-publico-btn {
+            background: linear-gradient(135deg, var(--success) 0%, #0da271 100%);
+            color: white;
+        }
+
+        .perfil-publico-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .action-card {
+            background: white;
+            padding: 25px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .action-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary);
+        }
+
+        .action-card i {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .action-card h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .action-card p {
+            color: var(--gray-500);
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.total i { color: var(--primary); }
+        .stat-card.pendentes i { color: var(--warning); }
+        .stat-card.aceitas i { color: var(--success); }
+        .stat-card.recentes i { color: var(--success); }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .section {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .solicitacao-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .solicitacao-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .cliente-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+        }
+
+        .solicitacao-content {
+            flex: 1;
+        }
+
+        .solicitacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .cliente-info h3 {
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .cliente-info p {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .status-info {
+            text-align: right;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .status-pendente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-aceita {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-recusada {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .solicitacao-date {
+            color: var(--gray-400);
+            font-size: 12px;
+        }
+
+        .mensagem {
+            background: var(--gray-100);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-top: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .mensagem p {
+            color: var(--gray-700);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .acoes-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        .resposta-form {
+            margin-top: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--gray-600);
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 20px;
+            background: white;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solicitacao-item {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .welcome-banner h2 {
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        .welcome-banner p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Banner de Boas-vindas -->
+        <div class="welcome-banner">
+            <h2>👋 Bem-vindo ao seu Painel, {{ contador.nome }}!</h2>
+            <p>Aqui você pode gerenciar todas as solicitações dos seus clientes</p>
+        </div>
+
+        <!-- Header com informações do contador -->
+        <div class="header">
+            <div class="header-content">
+                <img src="{{ contador.foto }}" alt="{{ contador.nome }}" class="contador-avatar">
+                <div class="header-info">
+                    <h1>{{ contador.nome }}</h1>
+                    <p>{{ contador.especialidade }}</p>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <span class="rating-stars" style="color: var(--warning);">⭐ {{ "%.1f"|format(contador.nota) }}</span>
+                        <span style="color: var(--gray-500);">({{ contador.avaliacoes_count }} avaliações)</span>
+                    </div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <a href="{{ url_for('perfil_contador', contador_id=contador.id) }}" class="btn perfil-publico-btn" target="_blank">
+                    <i class="fas fa-eye"></i> Ver Meu Perfil Público
+                </a>
+                <a href="{{ url_for('editar_perfil') }}" class="btn btn-primary">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+                <a href="{{ url_for('logout') }}" class="btn btn-secondary">
+                    <i class="fas fa-sign-out-alt"></i> Sair
+                </a>
+            </div>
+        </div>
+
+        <!-- Ações Rápidas -->
+        <div class="quick-actions">
+            <div class="action-card">
+                <i class="fas fa-bell"></i>
+                <h3>Solicitações Pendentes</h3>
+                <p>{{ propostas|selectattr('status', 'equalto', 'pendente')|list|length }} aguardando sua resposta</p>
+                <button class="btn btn-primary" onclick="filtrarSolicitacoes('pendente')">
+                    Ver Pendentes
+                </button>
+            </div>
+
+            <div class="action-card">
+                <i class="fas fa-chart-line"></i>
+                <h3>Seu Desempenho</h3>
+                <p>Taxa de aceitação: {{ (propostas|selectattr('status', 'equalto', 'aceita')|list|length / propostas|length * 100)|round|int if propostas else 0 }}%</p>
+                <a href="#estatisticas" class="btn btn-secondary">
+                    Ver Estatísticas
+                </a>
+            </div>
+
+            <div class="action-card">
+                <i class="fas fa-star"></i>
+                <h3>Avaliações</h3>
+                <p>Média: {{ "%.1f"|format(contador.nota) }} • Total: {{ contador.avaliacoes_count }}</p>
+                <a href="{{ url_for('perfil_contador', contador_id=contador.id) }}" class="btn btn-secondary" target="_blank">
+                    Ver Avaliações
+                </a>
+            </div>
+
+            <div class="action-card">
+                <i class="fas fa-user-edit"></i>
+                <h3>Melhorar Perfil</h3>
+                <p>Atualize suas informações para atrair mais clientes</p>
+                <a href="{{ url_for('editar_perfil') }}" class="btn btn-primary">
+                    Editar Perfil
+                </a>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats-cards" id="estatisticas">
+            <div class="stat-card total">
+                <i class="fas fa-list"></i>
+                <div class="stat-number">{{ propostas|length }}</div>
+                <div class="stat-label">Total de Solicitações</div>
+            </div>
+            <div class="stat-card pendentes">
+                <i class="fas fa-clock"></i>
+                <div class="stat-number">
+                    {{ propostas|selectattr('status', 'equalto', 'pendente')|list|length }}
+                </div>
+                <div class="stat-label">Pendentes</div>
+            </div>
+            <div class="stat-card aceitas">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-number">
+                    {{ propostas|selectattr('status', 'equalto', 'aceita')|list|length }}
+                </div>
+                <div class="stat-label">Aceitas</div>
+            </div>
+            <div class="stat-card recentes">
+                <i class="fas fa-history"></i>
+                <div class="stat-number">
+                    {% set propostas_recentes = propostas|selectattr('data_envio', '>=', data_limite) %}
+                    {{ propostas_recentes|list|length }}
+                </div>
+                <div class="stat-label">Últimos 30 Dias</div>
+            </div>
+        </div>
+
+        <!-- Lista de Solicitações -->
+        <div class="section">
+            <h2><i class="fas fa-inbox"></i> Solicitações Recebidas</h2>
+
+            <!-- Filtros -->
+            <div class="filters">
+                <button class="filter-btn active" onclick="filtrarSolicitacoes('todas')">
+                    <i class="fas fa-layer-group"></i> Todas ({{ propostas|length }})
+                </button>
+                <button class="filter-btn" onclick="filtrarSolicitacoes('pendente')">
+                    <i class="fas fa-clock"></i> Pendentes ({{ propostas|selectattr('status', 'equalto', 'pendente')|list|length }})
+                </button>
+                <button class="filter-btn" onclick="filtrarSolicitacoes('aceita')">
+                    <i class="fas fa-check-circle"></i> Aceitas ({{ propostas|selectattr('status', 'equalto', 'aceita')|list|length }})
+                </button>
+                <button class="filter-btn" onclick="filtrarSolicitacoes('recusada')">
+                    <i class="fas fa-times-circle"></i> Recusadas ({{ propostas|selectattr('status', 'equalto', 'recusada')|list|length }})
+                </button>
+            </div>
+
+            {% if propostas %}
+                {% for proposta in propostas %}
+                <div class="solicitacao-item" data-status="{{ proposta.status }}">
+                    <img src="{{ proposta.cliente.foto }}" alt="{{ proposta.cliente.nome }}" class="cliente-avatar">
+                    <div class="solicitacao-content">
+                        <div class="solicitacao-header">
+                            <div class="cliente-info">
+                                <h3>{{ proposta.cliente.nome }}</h3>
+                                <p>Cliente • {{ proposta.cliente.email }}</p>
+                                <div style="display: flex; gap: 15px; margin-top: 5px; font-size: 12px; color: var(--gray-500);">
+                                    <span><i class="fas fa-calendar"></i> {{ proposta.data_envio.strftime('%d/%m/%Y') }}</span>
+                                    <span><i class="fas fa-clock"></i> {{ proposta.data_envio.strftime('%H:%M') }}</span>
+                                </div>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-badge status-{{ proposta.status }}">
+                                    {{ proposta.status|title }}
+                                </div>
+                                <div class="solicitacao-date">
+                                    Recebida {{ proposta.data_envio.strftime('%d/%m') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mensagem">
+                            <strong>Solicitação do cliente:</strong>
+                            <p>"{{ proposta.mensagem }}"</p>
+                        </div>
+
+                        {% if proposta.status == 'pendente' %}
+                        <div class="acoes-section">
+                            <h4 style="margin-bottom: 10px;">Responder Solicitação</h4>
+                            <div class="resposta-form">
+                                <div class="form-group">
+                                    <textarea class="form-control" placeholder="Digite sua resposta para o cliente (opcional)" rows="3" id="resposta-{{ proposta.id }}"></textarea>
+                                </div>
+                                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                                    <button class="btn btn-success" onclick="responderProposta({{ proposta.id }}, 'aceita')">
+                                        <i class="fas fa-check"></i> Aceitar Proposta
+                                    </button>
+                                    <button class="btn btn-danger" onclick="responderProposta({{ proposta.id }}, 'recusada')">
+                                        <i class="fas fa-times"></i> Recusar Proposta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        {% elif proposta.status == 'aceita' %}
+                        <div class="acoes-section" style="background: #d1fae5; border-color: #a7f3d0;">
+                            <p style="color: #065f46; margin: 0;">
+                                <i class="fas fa-check-circle"></i> Você aceitou esta proposta em {{ proposta.data_envio.strftime('%d/%m/%Y às %H:%M') }}
+                            </p>
+                        </div>
+                        {% elif proposta.status == 'recusada' %}
+                        <div class="acoes-section" style="background: #fee2e2; border-color: #fecaca;">
+                            <p style="color: #991b1b; margin: 0;">
+                                <i class="fas fa-times-circle"></i> Você recusou esta proposta em {{ proposta.data_envio.strftime('%d/%m/%Y às %H:%M') }}
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-briefcase"></i>
+                    <h3>Nenhuma solicitação recebida</h3>
+                    <p>Você ainda não recebeu nenhuma proposta de clientes. Seu perfil será mostrado para clientes interessados em seus serviços.</p>
+                    <a href="{{ url_for('editar_perfil') }}" class="btn btn-primary">
+                        <i class="fas fa-user-edit"></i> Melhorar Meu Perfil
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+        // Filtros de solicitações
+        function filtrarSolicitacoes(filtro) {
+            const solicitacoes = document.querySelectorAll('.solicitacao-item');
+            const botoesFiltro = document.querySelectorAll('.filter-btn');
+
+            // Atualizar botões ativos
+            botoesFiltro.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            solicitacoes.forEach(solicitacao => {
+                const status = solicitacao.getAttribute('data-status');
+
+                let mostrar = false;
+
+                switch(filtro) {
+                    case 'todas':
+                        mostrar = true;
+                        break;
+                    default:
+                        mostrar = status === filtro;
+                }
+
+                if (mostrar) {
+                    solicitacao.style.display = 'flex';
+                    setTimeout(() => {
+                        solicitacao.style.opacity = '1';
+                        solicitacao.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    solicitacao.style.opacity = '0';
+                    solicitacao.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        solicitacao.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Responder proposta
+        async function responderProposta(propostaId, status) {
+            const respostaTextarea = document.getElementById(`resposta-${propostaId}`);
+            const mensagemResposta = respostaTextarea ? respostaTextarea.value : '';
+
+            const acao = status === 'aceita' ? 'aceitar' : 'recusar';
+            if (!confirm(`Tem certeza que deseja ${acao} esta proposta?`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch('/responder_proposta', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        proposta_id: propostaId,
+                        status: status,
+                        mensagem_resposta: mensagemResposta
+                    })
+                });
+
+                const resultado = await response.json();
+
+                if (resultado.success) {
+                    alert(resultado.message);
+                    // Recarregar a página para atualizar os status
+                    window.location.reload();
+                } else {
+                    alert(resultado.message);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao responder proposta. Tente novamente.');
+            }
+        }
+
+        // Animações de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const solicitacoes = document.querySelectorAll('.solicitacao-item');
+            solicitacoes.forEach((solicitacao, index) => {
+                solicitacao.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

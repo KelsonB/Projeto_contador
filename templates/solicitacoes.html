@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Solicitações - Encontrar Contador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .header h1 {
+            color: var(--primary);
+        }
+
+        .stats-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.total i { color: var(--primary); }
+        .stat-card.pendentes i { color: var(--warning); }
+        .stat-card.aceitas i { color: var(--success); }
+        .stat-card.recentes i { color: var(--success); }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .section {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 24px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            margin-bottom: 20px;
+            color: var(--dark);
+            border-bottom: 2px solid var(--gray-200);
+            padding-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .solicitacao-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            border: 1px solid var(--gray-200);
+            border-radius: var(--radius);
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .solicitacao-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow);
+        }
+
+        .contador-avatar {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+
+        .solicitacao-content {
+            flex: 1;
+        }
+
+        .solicitacao-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .contador-info h3 {
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .contador-info p {
+            color: var(--gray-500);
+            font-size: 14px;
+        }
+
+        .status-info {
+            text-align: right;
+        }
+
+        .status-badge {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .status-pendente {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-aceita {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-recusada {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .solicitacao-date {
+            color: var(--gray-400);
+            font-size: 12px;
+        }
+
+        .mensagem {
+            background: var(--gray-100);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-top: 10px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .mensagem p {
+            color: var(--gray-700);
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        .avaliacao-section {
+            margin-top: 15px;
+            padding: 15px;
+            background: var(--gray-50);
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-200);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .btn-success {
+            background: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #0da271;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--gray-500);
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: var(--gray-600);
+        }
+
+        .empty-state p {
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: 20px;
+            background: white;
+            color: var(--gray-600);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .solicitacao-meta {
+            display: flex;
+            gap: 15px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: var(--gray-500);
+            font-size: 12px;
+        }
+
+        .meta-item i {
+            font-size: 12px;
+        }
+
+        .rating-stars-input {
+            display: flex;
+            gap: 5px;
+            margin: 10px 0;
+        }
+
+        .rating-star {
+            font-size: 20px;
+            color: var(--gray-300);
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .rating-star.active {
+            color: var(--warning);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .solicitacao-item {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-paper-plane"></i> Minhas Solicitações</h1>
+            <div class="nav-buttons">
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar para Home
+                </a>
+            </div>
+        </div>
+
+        <!-- Estatísticas -->
+        <div class="stats-cards">
+            <div class="stat-card total">
+                <i class="fas fa-list"></i>
+                <div class="stat-number">{{ propostas|length }}</div>
+                <div class="stat-label">Total de Solicitações</div>
+            </div>
+            <div class="stat-card pendentes">
+                <i class="fas fa-clock"></i>
+                <div class="stat-number">
+                    {{ propostas|selectattr('status', 'equalto', 'pendente')|list|length }}
+                </div>
+                <div class="stat-label">Pendentes</div>
+            </div>
+            <div class="stat-card aceitas">
+                <i class="fas fa-check-circle"></i>
+                <div class="stat-number">
+                    {{ propostas|selectattr('status', 'equalto', 'aceita')|list|length }}
+                </div>
+                <div class="stat-label">Aceitas</div>
+            </div>
+            <div class="stat-card recentes">
+                <i class="fas fa-history"></i>
+                <div class="stat-number">
+                    {% set propostas_recentes = propostas|selectattr('data_envio', '>=', data_limite) %}
+                    {{ propostas_recentes|list|length }}
+                </div>
+                <div class="stat-label">Últimos 30 Dias</div>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="section">
+            <h2><i class="fas fa-filter"></i> Filtros</h2>
+            <div class="filters">
+                <button class="filter-btn active" onclick="filtrarSolicitacoes('todas')">
+                    <i class="fas fa-layer-group"></i> Todas
+                </button>
+                <button class="filter-btn" onclick="filtrarSolicitacoes('pendente')">
+                    <i class="fas fa-clock"></i> Pendentes
+                </button>
+                <button class="filter-btn" onclick="filtrarSolicitacoes('aceita')">
+                    <i class="fas fa-check-circle"></i> Aceitas
+                </button>
+                <button class="filter-btn" onclick="filtrarSolicitacoes('recusada')">
+                    <i class="fas fa-times-circle"></i> Recusadas
+                </button>
+            </div>
+        </div>
+
+        <!-- Lista de Solicitações -->
+        <div class="section">
+            <h2><i class="fas fa-history"></i> Histórico de Solicitações</h2>
+
+            {% if propostas %}
+                {% for proposta in propostas %}
+                <div class="solicitacao-item" data-status="{{ proposta.status }}">
+                    <img src="{{ proposta.contador.foto }}" alt="{{ proposta.contador.nome }}" class="contador-avatar">
+                    <div class="solicitacao-content">
+                        <div class="solicitacao-header">
+                            <div class="contador-info">
+                                <h3>{{ proposta.contador.nome }}</h3>
+                                <p>{{ proposta.contador.especialidade }}</p>
+                                <div class="solicitacao-meta">
+                                    <div class="meta-item">
+                                        <i class="fas fa-map-marker-alt"></i>
+                                        {{ proposta.contador.localizacao }}
+                                    </div>
+                                    <div class="meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        {{ proposta.contador.tempo_resposta }}
+                                    </div>
+                                    {% if proposta.contador.verificado %}
+                                    <div class="meta-item" style="color: var(--success);">
+                                        <i class="fas fa-check-circle"></i>
+                                        Verificado
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="status-info">
+                                <div class="status-badge status-{{ proposta.status }}">
+                                    {{ proposta.status|title }}
+                                </div>
+                                <div class="solicitacao-date">
+                                    {{ proposta.data_envio.strftime('%d/%m/%Y às %H:%M') }}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mensagem">
+                            <p>"{{ proposta.mensagem }}"</p>
+                        </div>
+
+                        {% if proposta.status == 'aceita' %}
+                        <div class="avaliacao-section">
+                            <h4 style="margin-bottom: 10px;">Avalie este contador</h4>
+                            <div class="rating-stars-input" id="rating-{{ proposta.contador.id }}">
+                                <span class="rating-star" data-rating="1">⭐</span>
+                                <span class="rating-star" data-rating="2">⭐</span>
+                                <span class="rating-star" data-rating="3">⭐</span>
+                                <span class="rating-star" data-rating="4">⭐</span>
+                                <span class="rating-star" data-rating="5">⭐</span>
+                            </div>
+                            <textarea class="form-control" placeholder="Deixe um comentário (opcional)" rows="2" style="width: 100%; margin: 10px 0; padding: 8px; border: 1px solid var(--gray-300); border-radius: var(--radius);"></textarea>
+                            <button class="btn btn-success" onclick="enviarAvaliacao({{ proposta.contador.id }}, this)">
+                                <i class="fas fa-star"></i> Enviar Avaliação
+                            </button>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-paper-plane"></i>
+                    <h3>Nenhuma solicitação encontrada</h3>
+                    <p>Você ainda não enviou nenhuma proposta para contadores. Encontre contadores especializados e envie sua primeira solicitação.</p>
+                    <a href="{{ url_for('index') }}" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Encontrar Contadores
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Dicas -->
+        {% if propostas %}
+        <div class="section">
+            <h2><i class="fas fa-lightbulb"></i> Suas Estatísticas de Solicitações</h2>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                <div style="text-align: center; padding: 15px; background: var(--gray-100); border-radius: var(--radius);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">
+                        {{ (propostas|selectattr('status', 'equalto', 'aceita')|list|length / propostas|length * 100)|round|int }}%
+                    </div>
+                    <div style="font-size: 12px; color: var(--gray-500);">Taxa de Aceitação</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: var(--gray-100); border-radius: var(--radius);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--warning);">
+                        {{ (propostas|selectattr('status', 'equalto', 'pendente')|list|length / propostas|length * 100)|round|int }}%
+                    </div>
+                    <div style="font-size: 12px; color: var(--gray-500);">Solicitações Pendentes</div>
+                </div>
+                <div style="text-align: center; padding: 15px; background: var(--gray-100); border-radius: var(--radius);">
+                    <div style="font-size: 1.5rem; font-weight: 700; color: var(--success);">
+                        {{ propostas|length }}
+                    </div>
+                    <div style="font-size: 12px; color: var(--gray-500);">Contadores Contatados</div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Filtros de solicitações
+        function filtrarSolicitacoes(filtro) {
+            const solicitacoes = document.querySelectorAll('.solicitacao-item');
+            const botoesFiltro = document.querySelectorAll('.filter-btn');
+
+            // Atualizar botões ativos
+            botoesFiltro.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            solicitacoes.forEach(solicitacao => {
+                const status = solicitacao.getAttribute('data-status');
+
+                let mostrar = false;
+
+                switch(filtro) {
+                    case 'todas':
+                        mostrar = true;
+                        break;
+                    default:
+                        mostrar = status === filtro;
+                }
+
+                if (mostrar) {
+                    solicitacao.style.display = 'flex';
+                    setTimeout(() => {
+                        solicitacao.style.opacity = '1';
+                        solicitacao.style.transform = 'translateY(0)';
+                    }, 10);
+                } else {
+                    solicitacao.style.opacity = '0';
+                    solicitacao.style.transform = 'translateY(20px)';
+                    setTimeout(() => {
+                        solicitacao.style.display = 'none';
+                    }, 300);
+                }
+            });
+        }
+
+        // Configurar estrelas de avaliação
+        document.querySelectorAll('.rating-stars-input').forEach(starsContainer => {
+            starsContainer.querySelectorAll('.rating-star').forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    const container = this.parentElement;
+
+                    // Atualizar visual das estrelas
+                    container.querySelectorAll('.rating-star').forEach(s => {
+                        s.classList.toggle('active', parseInt(s.getAttribute('data-rating')) <= rating);
+                    });
+                });
+            });
+        });
+
+        // Enviar avaliação
+        async function enviarAvaliacao(contadorId, btn) {
+            const container = btn.parentElement;
+            const stars = container.querySelectorAll('.rating-star');
+            const rating = Array.from(stars).findIndex(star => star.classList.contains('active')) + 1;
+            const comentario = container.querySelector('textarea').value;
+
+            if (rating === 0) {
+                alert('Por favor, selecione uma avaliação com as estrelas!');
+                return;
+            }
+
+            try {
+                const response = await fetch('/avaliar_contador', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        contador_id: contadorId,
+                        nota: rating,
+                        comentario: comentario
+                    })
+                });
+
+                const resultado = await response.json();
+
+                if (resultado.success) {
+                    alert(resultado.message);
+                    // Remover seção de avaliação após envio
+                    container.innerHTML = '<p style="color: var(--success);"><i class="fas fa-check-circle"></i> Avaliação enviada com sucesso!</p>';
+                } else {
+                    alert(resultado.message);
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                alert('Erro ao enviar avaliação. Tente novamente.');
+            }
+        }
+
+        // Animações de entrada
+        document.addEventListener('DOMContentLoaded', function() {
+            const solicitacoes = document.querySelectorAll('.solicitacao-item');
+            solicitacoes.forEach((solicitacao, index) => {
+                solicitacao.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+    </script>
+</body>
+</html>

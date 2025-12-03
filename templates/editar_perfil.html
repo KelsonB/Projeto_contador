@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Perfil - Encontrar Contador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #64748b;
+            --light: #f8fafc;
+            --dark: #1e293b;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-400: #94a3b8;
+            --gray-500: #64748b;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --radius: 12px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .profile-card {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--primary);
+        }
+
+        .profile-info h2 {
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: var(--gray-500);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--gray-700);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
+            border-radius: var(--radius);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 24px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            text-decoration: none;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--gray-200);
+            color: var(--gray-700);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-300);
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 8px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background: #dcfce7;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+
+        .file-upload {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-upload-input {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+        }
+
+        .file-upload-label {
+            display: block;
+            padding: 12px 16px;
+            background: var(--gray-100);
+            border: 2px dashed var(--gray-300);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .file-upload-label:hover {
+            border-color: var(--primary);
+            background: var(--gray-200);
+        }
+
+        .file-upload-label i {
+            margin-right: 8px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .profile-card {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .tab.active {
+            border-bottom-color: var(--primary);
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+
+        .current-photo {
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .current-photo img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-user-edit"></i> Editar Perfil</h1>
+            <p>Atualize suas informações pessoais e profissionais</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'success' if category == 'success' else 'error' }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST" enctype="multipart/form-data" class="profile-card">
+            <div class="profile-header">
+                <img src="{{ usuario.foto }}" alt="Avatar" class="profile-avatar" id="avatarPreview">
+                <div class="profile-info">
+                    <h2>{{ usuario.nome }}</h2>
+                    <p>{{ usuario.tipo|title }} • {{ usuario.email }}</p>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="abrirTab('pessoal')">Informações Pessoais</div>
+                {% if usuario.tipo == 'contador' %}
+                <div class="tab" onclick="abrirTab('profissional')">Informações Profissionais</div>
+                {% endif %}
+            </div>
+
+            <!-- Aba de Informações Pessoais -->
+            <div id="pessoal" class="tab-content active">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="form-label" for="nome">Nome Completo *</label>
+                        <input type="text" id="nome" name="nome" class="form-control" value="{{ usuario.nome }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">E-mail *</label>
+                        <input type="email" id="email" name="email" class="form-control" value="{{ usuario.email }}" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telefone">Telefone</label>
+                    <input type="text" id="telefone" name="telefone" class="form-control" value="{{ usuario.telefone or '' }}" placeholder="(11) 99999-9999">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Foto de Perfil</label>
+
+                    <div class="current-photo">
+                        <small>Foto atual:</small>
+                        <div>
+                            <img src="{{ usuario.foto }}" alt="Foto atual" id="currentPhoto">
+                        </div>
+                    </div>
+
+                    <div class="file-upload">
+                        <input type="file" id="foto" name="foto" class="file-upload-input" accept="image/*" onchange="previewImage(this)">
+                        <label for="foto" class="file-upload-label">
+                            <i class="fas fa-upload"></i> Escolher nova foto
+                        </label>
+                    </div>
+                    <small style="color: var(--gray-500); font-size: 12px; display: block; margin-top: 8px;">
+                        Formatos suportados: JPG, PNG, GIF. Tamanho máximo: 5MB
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="bio">Biografia</label>
+                    <textarea id="bio" name="bio" class="form-control" rows="3" placeholder="Conte um pouco sobre você...">{{ usuario.bio or '' }}</textarea>
+                </div>
+            </div>
+
+            <!-- Aba de Informações Profissionais (apenas para contadores) -->
+            {% if usuario.tipo == 'contador' and contador %}
+            <div id="profissional" class="tab-content">
+                <div class="form-group">
+                    <label class="form-label" for="especialidade">Especialidade Principal *</label>
+                    <input type="text" id="especialidade" name="especialidade" class="form-control"
+                           value="{{ contador.especialidade }}" placeholder="Sua especialidade principal" required>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="form-label" for="localizacao">Localização</label>
+                        <input type="text" id="localizacao" name="localizacao" class="form-control"
+                               value="{{ contador.localizacao }}" placeholder="Cidade, Estado">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="tempo_resposta">Tempo de Resposta</label>
+                        <select id="tempo_resposta" name="tempo_resposta" class="form-control">
+                            <option value="1 hora" {{ 'selected' if contador.tempo_resposta == '1 hora' }}>1 hora</option>
+                            <option value="2 horas" {{ 'selected' if contador.tempo_resposta == '2 horas' }}>2 horas</option>
+                            <option value="3 horas" {{ 'selected' if contador.tempo_resposta == '3 horas' }}>3 horas</option>
+                            <option value="4 horas" {{ 'selected' if contador.tempo_resposta == '4 horas' }}>4 horas</option>
+                            <option value="1 dia" {{ 'selected' if contador.tempo_resposta == '1 dia' }}>1 dia</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label class="form-label" for="experiencia">Experiência</label>
+                        <input type="text" id="experiencia" name="experiencia" class="form-control"
+                               value="{{ contador.experiencia or '' }}" placeholder="Ex: 5 anos na área tributária">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="formacao">Formação</label>
+                        <input type="text" id="formacao" name="formacao" class="form-control"
+                               value="{{ contador.formacao or '' }}" placeholder="Ex: CRC Ativo, Pós em Direito Tributário">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Especialidades (Tags)</label>
+                    <div class="checkbox-group">
+                        {% set current_tags = contador.tags|fromjson if contador.tags else [] %}
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="MEI" {{ 'checked' if 'MEI' in current_tags }}> MEI
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Pequenas Empresas" {{ 'checked' if 'Pequenas Empresas' in current_tags }}> Pequenas Empresas
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Médias Empresas" {{ 'checked' if 'Médias Empresas' in current_tags }}> Médias Empresas
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Impostos" {{ 'checked' if 'Impostos' in current_tags }}> Impostos
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Folha de Pagamento" {{ 'checked' if 'Folha de Pagamento' in current_tags }}> Folha de Pagamento
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Consultoria" {{ 'checked' if 'Consultoria' in current_tags }}> Consultoria
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Auditoria" {{ 'checked' if 'Auditoria' in current_tags }}> Auditoria
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="BPO" {{ 'checked' if 'BPO' in current_tags }}> BPO
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="DP" {{ 'checked' if 'DP' in current_tags }}> Departamento Pessoal
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="eSocial" {{ 'checked' if 'eSocial' in current_tags }}> eSocial
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Tributário" {{ 'checked' if 'Tributário' in current_tags }}> Tributário
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="tags" value="Fiscal" {{ 'checked' if 'Fiscal' in current_tags }}> Fiscal
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="descricao">Descrição Profissional</label>
+                    <textarea id="descricao" name="descricao" class="form-control" rows="4"
+                              placeholder="Descreva sua experiência, formação, especialidades e como você pode ajudar seus clientes...">{{ contador.descricao or '' }}</textarea>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="nav-buttons">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Salvar Alterações
+                </button>
+                <a href="{{ url_for('index') }}" class="btn btn-secondary">
+                    <i class="fas fa-arrow-left"></i> Voltar para Home
+                </a>
+                {% if usuario.tipo == 'contador' %}
+                <a href="{{ url_for('perfil_contador', contador_id=contador.id) }}" class="btn btn-secondary" target="_blank">
+                    <i class="fas fa-eye"></i> Ver Meu Perfil Público
+                </a>
+                {% endif %}
+            </div>
+
+            <div style="margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--gray-200);">
+                <small style="color: var(--gray-500);">
+                    <i class="fas fa-info-circle"></i> Campos marcados com * são obrigatórios
+                </small>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Sistema de abas
+        function abrirTab(tabName) {
+            // Esconder todas as abas
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remover classe active de todas as tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Mostrar a aba selecionada
+            document.getElementById(tabName).classList.add('active');
+
+            // Ativar a tab selecionada
+            event.currentTarget.classList.add('active');
+        }
+
+        // Preview da imagem selecionada
+        function previewImage(input) {
+            const preview = document.getElementById('avatarPreview');
+            const currentPhoto = document.getElementById('currentPhoto');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    currentPhoto.src = e.target.result;
+                }
+
+                reader.readAsDataURL(input.files[0]);
+
+                // Mostrar feedback visual
+                const label = input.nextElementSibling;
+                label.innerHTML = `<i class="fas fa-check"></i> Arquivo selecionado: ${input.files[0].name}`;
+                label.style.borderColor = 'var(--success)';
+                label.style.background = '#dcfce7';
+            }
+        }
+
+        // Validação do formulário
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const nome = document.getElementById('nome').value;
+            const email = document.getElementById('email').value;
+
+            if (!nome || !email) {
+                e.preventDefault();
+                alert('Por favor, preencha todos os campos obrigatórios.');
+                return;
+            }
+
+            // Validação de email básica
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                e.preventDefault();
+                alert('Por favor, insira um email válido.');
+                return;
+            }
+
+            // Validação de arquivo (se houver)
+            const fileInput = document.getElementById('foto');
+            if (fileInput.files.length > 0) {
+                const file = fileInput.files[0];
+                const validTypes = ['image/jpeg', 'image/png', 'image/gif'];
+                const maxSize = 5 * 1024 * 1024; // 5MB
+
+                if (!validTypes.includes(file.type)) {
+                    e.preventDefault();
+                    alert('Por favor, selecione apenas imagens nos formatos JPG, PNG ou GIF.');
+                    return;
+                }
+
+                if (file.size > maxSize) {
+                    e.preventDefault();
+                    alert('A imagem selecionada é muito grande. O tamanho máximo permitido é 5MB.');
+                    return;
+                }
+            }
+        });
+
+        // Feedback visual para campos obrigatórios
+        document.querySelectorAll('input[required], select[required], textarea[required]').forEach(field => {
+            field.addEventListener('blur', function() {
+                if (!this.value) {
+                    this.style.borderColor = 'var(--warning)';
+                } else {
+                    this.style.borderColor = 'var(--gray-300)';
+                }
+            });
+        });
+
+        // Máscara para telefone
+        document.getElementById('telefone')?.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+
+            if (value.length <= 11) {
+                value = value.replace(/^(\d{2})(\d)/g, '($1) $2');
+                value = value.replace(/(\d)(\d{4})$/, '$1-$2');
+                e.target.value = value;
+            }
+        });
+
+        // Auto-salvar rascunho (opcional)
+        let autoSaveTimer;
+        document.querySelectorAll('input, textarea, select').forEach(field => {
+            field.addEventListener('input', function() {
+                clearTimeout(autoSaveTimer);
+                autoSaveTimer = setTimeout(() => {
+                    // Poderia implementar auto-save aqui
+                    console.log('Mudanças detectadas - pronto para auto-save');
+                }, 2000);
+            });
+        });
+
+        // Confirmação antes de sair da página se houver mudanças
+        let hasChanges = false;
+        document.querySelectorAll('input, textarea, select').forEach(field => {
+            field.addEventListener('input', () => hasChanges = true);
+        });
+
+        window.addEventListener('beforeunload', function(e) {
+            if (hasChanges) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        });
+
+        // Focar no primeiro campo ao carregar a página
+        window.addEventListener('load', function() {
+            document.getElementById('nome').focus();
+        });
+    </script>
+</body>
+</html>
